@@ -1,0 +1,1 @@
+web: sh setup.sh && streamlit run Dis-Chem_Bulk_Creator.py
