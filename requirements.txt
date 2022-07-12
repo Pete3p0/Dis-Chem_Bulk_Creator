@@ -1,7 +1,7 @@
 numpy==1.22.2
 pandas==1.4.1
 streamlit==1.10.0
-fitz==0.0.1.dev2
+PyMuPDF==1.19.6
 tabula==1.0.5
 tabula-py==2.4.0
 PyPDF2==2.5.0
