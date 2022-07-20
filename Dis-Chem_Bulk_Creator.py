@@ -67,7 +67,7 @@ if submitted:
             with fitz.open(stream=file.read(), filetype="pdf") as doc:
                 text = ""
                 for page in doc:
-                    text += page.getText()
+                    text += page.get_text()
                     first_word = "Address"
                     second_word = "36 SATURN"
                     index1=text.find(first_word)
