@@ -121,7 +121,7 @@ if submitted:
     st.write("The following stores are missing the SMD code on the map: ")
     st.table(df_missing_unique2)
 
-    df_final = df_merged2[['Notes','SMD Store Code','1','2','3','SMD Product Code','SMD Description','Qty','Price']]
+    df_final = df_merged2[['Notes','Account Number','SMD Store Code','1','2','3','SMD Product Code','SMD Description','Qty','Price']]
     st.dataframe(df_final)
 
 
