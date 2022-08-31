@@ -37,6 +37,7 @@ st.title('PDF to Excel - Dis-Chem')
 with st.form("Input"):
     # Upload files
     files = st.file_uploader('Upload all orders',accept_multiple_files=True)
+    st.write("Number of PDF orders uploaded: {}".format(len(files)))
     st.write("Est time: ")
     st.write("10 files ~ 10s")
     st.write("50 files ~ 45s")
@@ -51,7 +52,7 @@ if submitted:
     start = timeit.default_timer()
     # Read data in uploaded files and add filenames
     if files:
-        st.write("Number of PDF files uploaded: {}".format(len(files)))
+        # st.write("Number of PDF files uploaded: {}".format(len(files)))
         total_num_pages=[]
         address_list = []
         for file in files:
@@ -148,7 +149,7 @@ if submitted:
     df_merged2 = df_merged1.merge(df_store_map,how='left',on="Store Name")
     missing_stores = df_merged2['SMD Store Name'].isnull()
     df_missing_store = df_merged2[missing_stores]
-    df_missing_store_list = df_missing_store[["Store Name"]]
+    df_missing_store_list = df_missing_store[["Store Name","1"]]
     df_missing_unique2 = df_missing_store_list.drop_duplicates()
     st.write("The following stores are missing the SMD code on the map: ")
     st.table(df_missing_unique2)
