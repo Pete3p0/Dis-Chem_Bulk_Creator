@@ -159,8 +159,9 @@ if submitted:
     
     df_merged2['Total Amount'] = df_merged2['Qty'] * df_merged2['Price']
     st.write('Order value for each store:')
-    grouped_df_value = df_merged2.groupby(["Store Name"]).agg({"Qty":"sum", "Total Amount":"sum"}).sort_values("Total Amount", ascending=False)
-    st.table(grouped_df_value)
+    grouped_df_value = df_merged2.groupby(["Store Name"],as_index=False).agg({"Qty":"sum", "Total Amount":"sum"}).sort_values("Total Amount", ascending=False)
+    st.table(grouped_df_value.style.format({'Qty':'{:,.0f}','Total Amount':'R{:,.2f}'}))
+    grouped_df_value_less = grouped_df_value[grouped_df_value['Total Amount'] < 1500]
     df_final = df_merged2[['Notes','Account Number','SMD Store Code','Order No.','2','3','SMD Product Code','SMD Description','Qty','Price']]
     st.write('Final Table')
     st.dataframe(df_final)
@@ -170,6 +171,12 @@ if submitted:
     st.write('Time: ', stop - start)  
 
     # Output to .xlsx
-    st.write('Please ensure that no products are missing before downloading!')
+    st.write('________________________________________________________________________')
+    st.write('Click below to download final table')
     st.markdown(get_table_download_link(df_final), unsafe_allow_html=True)
+
+    # Table less than R1500
+    st.write('________________________________________________________________________')
+    st.write('Click below to download table with orders less than R1500')
+    st.markdown(get_table_download_link(grouped_df_value_less), unsafe_allow_html=True)
          
