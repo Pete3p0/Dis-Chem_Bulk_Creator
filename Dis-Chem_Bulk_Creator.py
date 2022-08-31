@@ -117,7 +117,7 @@ if submitted:
     
     # Tidy data
     df['PO'] = df['filename'].str.replace('.pdf','')
-    df['1'] = df['PO'].str.replace('PO - ','')
+    df['Order No.'] = df['PO'].str.replace('PO - ','')
     # df['1'] = df['PO'].astype(int)
     # df['List Cost'] = df['Uom List Cost'].str.split(' ').str[1]
     df['Price'] = df['List Cost'].astype(float)
@@ -149,7 +149,7 @@ if submitted:
     df_merged2 = df_merged1.merge(df_store_map,how='left',on="Store Name")
     missing_stores = df_merged2['SMD Store Name'].isnull()
     df_missing_store = df_merged2[missing_stores]
-    df_missing_store_list = df_missing_store[["Store Name","1"]]
+    df_missing_store_list = df_missing_store[["Store Name","Order No."]]
     df_missing_unique2 = df_missing_store_list.drop_duplicates()
     st.write("The following stores are missing the SMD code on the map: ")
     st.table(df_missing_unique2)
@@ -157,7 +157,7 @@ if submitted:
     # df_merged2['Net Value'] = df_merged2['Net Value'].astype(float)
     # st.dataframe(df_merged2)
     
-    df_final = df_merged2[['Notes','Account Number','SMD Store Code','1','2','3','SMD Product Code','SMD Description','Qty','Price']]
+    df_final = df_merged2[['Notes','Account Number','SMD Store Code','Order No.','2','3','SMD Product Code','SMD Description','Qty','Price']]
     st.dataframe(df_final)
 
 
