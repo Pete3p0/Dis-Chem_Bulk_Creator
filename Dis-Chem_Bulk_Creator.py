@@ -157,7 +157,12 @@ if submitted:
     # df_merged2['Net Value'] = df_merged2['Net Value'].astype(float)
     # st.dataframe(df_merged2)
     
+    df_merged2['Total Amount'] = df_merged2['Qty'] * df_merged2['Price']
+    st.write('Order value for each store:')
+    grouped_df_value = df_merged2.groupby(["Store Name"]).agg({"Qty":"sum", "Total Amount":"sum"}).sort_values("Total Amount", ascending=False)
+    st.dataframe(grouped_df_value)
     df_final = df_merged2[['Notes','Account Number','SMD Store Code','Order No.','2','3','SMD Product Code','SMD Description','Qty','Price']]
+    st.write('Final Table')
     st.dataframe(df_final)
 
 
