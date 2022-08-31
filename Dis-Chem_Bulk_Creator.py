@@ -51,7 +51,7 @@ if submitted:
     start = timeit.default_timer()
     # Read data in uploaded files and add filenames
     if files:
-        # st.write("Number of PDF files uploaded: {}".format(len(files)))
+        st.write("Number of PDF files uploaded: {}".format(len(files)))
         total_num_pages=[]
         address_list = []
         for file in files:
