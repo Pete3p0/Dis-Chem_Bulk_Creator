@@ -156,7 +156,7 @@ if submitted:
     # df_merged2['Net Value'] = df_merged2['Net Value'].astype(float)
     # st.dataframe(df_merged2)
     
-    df_final = df_merged2[['Notes','Account Number','SMD Store Code','Store Name','1','2','3','SMD Product Code','SMD Description','Qty','Price']]
+    df_final = df_merged2[['Notes','Account Number','SMD Store Code','1','2','3','SMD Product Code','SMD Description','Qty','Price']]
     st.dataframe(df_final)
 
 
