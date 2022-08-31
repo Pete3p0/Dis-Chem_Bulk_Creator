@@ -1,3 +1,5 @@
+import json
+# from typing import final
 import pandas as pd
 import numpy as np
 import streamlit as st
@@ -47,22 +49,20 @@ with st.form("Input"):
 if submitted:
 
     start = timeit.default_timer()
-
-
-    # Read data and get address
-
     # Read data in uploaded files and add filenames
     if files:
-        for file in files:
-            filenames = [file.name for file in files]
-            file.seek(0)
-        files_read = [read_pdf(file,pages='all')[0] for file in files]
-        for dataframe, filename in zip(files_read,filenames):
-            dataframe['filename'] = filename
-        
-        # Get address
+        # st.write("Number of PDF files uploaded: {}".format(len(files)))
+        total_num_pages=[]
         address_list = []
-        for file in files:    
+        for file in files:
+            # st.write("-------------------PDF------------------")
+            # st.write("PDF file information: {}".format(file))
+            readpdf = PyPDF2.PdfFileReader(file)
+            totalpages = readpdf.numPages
+            # st.write("Total page number: {}".format(totalpages))
+            total_num_pages.append(totalpages)
+
+            ##### Address column population #######
             file.seek(0)
             with fitz.open(stream=file.read(), filetype="pdf") as doc:
                 text = ""
@@ -72,21 +72,53 @@ if submitted:
                     second_word = "36 SATURN"
                     index1=text.find(first_word)
                     index2=text.find(second_word)
-                    addresses = [(text[index1+8:index2-1]) for page in doc]
-                    address_list.append(addresses[0])
-                    for dataframe, address in zip(files_read,address_list):
-                        dataframe['Store Name'] = address
-        
-        df = pd.concat(files_read)
+                    addresses = text[index1+8:index2-1]
+                    
+                    address_list.append(addresses)
+                    
+                    #for final_dataframe, address in zip(files_read,address_list):
+                        #final_dataframe['Store Name'] = address
+
+            for i in range(totalpages):
+                filenames = [file.name for file in files]
+                file.seek(0)
+
+        # Array holding df's from each pdf
+        dfs=[]
+
+        for i in range(len(total_num_pages)):
+            # st.write("-------------- DATAFRAME {} -----------------".format(i+1))
+            files_read = read_pdf(files[i],pages="all",guess=False,area=[186.6,5.5,367.9,751.0],columns=[257.9,320.1,402.2,447.6,484.5,510.0,572.5,626.3,691.5])
+            concat_tables_df = pd.concat(files_read)
+
+            #Add filename column
+            concat_tables_df['filename'] = filenames[i]
+            #Add address column
+            if(total_num_pages[i] < 2):
+                concat_tables_df['Store Name'] = address_list[i]
+            else:
+                concat_tables_df['Store Name'] = address_list[i+1]
+
+            concat_tables_df = concat_tables_df.reset_index(drop=True)
+            # st.write(concat_tables_df)
+
+            dfs.append(concat_tables_df)
+
+        final_dataframe = pd.concat(dfs)
+        final_dataframe = final_dataframe.reset_index(drop=True)
+        # st.write("-------------FINAL DATAFRAME-------------")
+        # st.write(final_dataframe)
+      
+        #df = pd.concat(files_read)
     
     # Remove blank rows
-    df = df.dropna(subset = ["Article No"])
+    df = final_dataframe.dropna(subset = ["Article No"])
     
     # Tidy data
     df['PO'] = df['filename'].str.replace('.pdf','')
     df['1'] = df['PO'].str.replace('PO - ','')
     # df['1'] = df['PO'].astype(int)
-    df['List Cost'] = df['Uom List Cost'].str.split(' ').str[1]
+    # df['List Cost'] = df['Uom List Cost'].str.split(' ').str[1]
     df['Price'] = df['List Cost'].astype(float)
     df['Notes']  = notes
     df['2'] = ''
@@ -121,7 +153,10 @@ if submitted:
     st.write("The following stores are missing the SMD code on the map: ")
     st.table(df_missing_unique2)
 
-    df_final = df_merged2[['Notes','Account Number','SMD Store Code','1','2','3','SMD Product Code','SMD Description','Qty','Price']]
+    # df_merged2['Net Value'] = df_merged2['Net Value'].astype(float)
+    # st.dataframe(df_merged2)
+    
+    df_final = df_merged2[['Notes','Account Number','SMD Store Code','Store Name','1','2','3','SMD Product Code','SMD Description','Qty','Price']]
     st.dataframe(df_final)
 
 
