@@ -70,7 +70,7 @@ if submitted:
                 for page in doc:
                     text += page.get_text()
                     first_word = "Address"
-                    second_word = "36 SATURN"
+                    second_word = "13 VILLAGE"
                     index1=text.find(first_word)
                     index2=text.find(second_word)
                     addresses = text[index1+8:index2-1]
