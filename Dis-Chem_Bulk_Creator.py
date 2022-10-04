@@ -162,7 +162,7 @@ if submitted:
     grouped_df_value = df_merged2.groupby(["Store Name"],as_index=False).agg({"Qty":"sum", "Total Amount":"sum"}).sort_values("Total Amount", ascending=False)
     st.table(grouped_df_value.style.format({'Qty':'{:,.0f}','Total Amount':'R{:,.2f}'}))
     grouped_df_value_less = grouped_df_value[grouped_df_value['Total Amount'] < 1500]
-    df_final = df_merged2[['Notes','SMD Store Code','Order No.','2','3','SMD Product Code','SMD Description','Qty','Price']]
+    df_final = df_merged2[['Notes','Account Number','SMD Store Code','Order No.','2','3','SMD Product Code','SMD Description','Qty','Price']]
     st.write('Final Table')
     st.dataframe(df_final)
 
